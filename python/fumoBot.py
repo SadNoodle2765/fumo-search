@@ -103,7 +103,7 @@ def getFromYahooAuction():
     try:
         numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
     except:
-        print(response)
+        print(response.content)
         return False
 
     numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
@@ -175,7 +175,7 @@ def getFromStore(base_url: str):
     try:
         numOfPages = soup.select('.pagination-outer>.pagination>li>a')[-1]
     except:
-        print(response)
+        print(response.content)
         return False
 
     startIndex = numOfPages.attrs['href'].find('page=') + 5
