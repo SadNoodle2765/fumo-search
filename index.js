@@ -24,7 +24,7 @@ app.get('/api/fumo', (request, response) => {
 })
 
 app.get('/updateDB', (request, response) => {
-    response.end('Updating DB')
+    response.send('Updating DB')
     let options = {
         mode: 'text',
         pythonOptions: ['-u'],
@@ -38,6 +38,7 @@ app.get('/updateDB', (request, response) => {
         console.log('result: ', result.toString())
         response.send(result.toString())
     })
+    response.end('Finished Updating.')
 })
 
 
