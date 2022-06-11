@@ -1,5 +1,4 @@
-from dotenv import dotenv_values
+from os import environ
 
-config = dotenv_values('.env')
-
-print(config)
+print(environ.get('PORT'))
+print(environ.get('MONGODB_URL'))
