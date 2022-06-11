@@ -23,21 +23,22 @@ app.get('/api/fumo', (request, response) => {
     }
 })
 
-// app.get('/', (request, response) => {
-//     let options = {
-//         mode: 'text',
-//         pythonOptions: ['-u'],
-//         scriptPath: './python',
-//         args: ['SadNoodle']
-//     }
+app.get('/updateDB', (request, response) => {
+    response.end('Updating DB')
+    let options = {
+        mode: 'text',
+        pythonOptions: ['-u'],
+        scriptPath: './python',
+        args: ['SadNoodle']
+    }
 
-//     PythonShell.run('python_test.py', options, (err, result) => {
-//         if (err) throw err;
+    PythonShell.run('python_test.py', options, (err, result) => {
+        if (err) throw err;
 
-//         console.log('result: ', result.toString())
-//         response.send(result.toString())
-//     })
-// })
+        console.log('result: ', result.toString())
+        response.send(result.toString())
+    })
+})
 
 
 
