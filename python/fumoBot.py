@@ -1,10 +1,8 @@
-import sys
 import time
-from tracemalloc import start
 import requests
 import os
 from bs4 import BeautifulSoup
-from csv import writer
+
 
 import fumoDB
 from fumo import FumoItem, FumoAuctionItem
