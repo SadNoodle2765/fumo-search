@@ -171,11 +171,11 @@ def updateRecords():
     # print('Pulling from Yahoo Shopping')
     # getFromYahooShopping()
     
-    print('Pulling from Mercari')
-    getFromStore(BASE_URL_MERCARI)
+    # print('Pulling from Mercari')
+    # getFromStore(BASE_URL_MERCARI)
 
-    print('Pulling from Rakuma')
-    getFromStore(BASE_URL_RAKUMA)
+    # print('Pulling from Rakuma')
+    # getFromStore(BASE_URL_RAKUMA)
 
     # with open('soup.txt', 'w', encoding='utf8') as file:                # Storing data
     #     file.write(soup.prettify())
