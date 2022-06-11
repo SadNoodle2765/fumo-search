@@ -1,12 +1,14 @@
 from pymongo import MongoClient
+from os import environ
 import requests
 
 from fumo import FumoItem, FumoAuctionItem
 
-_PASSWORD = 'HskVtFvFpvHxOWOK'
+MONGODB_URL = environ.get('MONGODB_URL')
 
 
-client = MongoClient(f'mongodb+srv://noodlebot:{_PASSWORD}@cluster0.36l2o.mongodb.net/fumoApp?retryWrites=true&w=majority')
+
+client = MongoClient(MONGODB_URL)
 db = client.fumoApp
 collection = db.fumos
 
