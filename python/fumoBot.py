@@ -1,3 +1,4 @@
+from heapq import merge
 import time
 import requests
 import os
@@ -16,7 +17,7 @@ BASE_URL_AUCTION = 'https://buyee.jp/item/search/query/東方%20ふもふも'
 BASE_URL_MERCARI = 'https://buyee.jp/mercari/search?keyword=東方+ふもふも'
 BASE_URL_RAKUMA = 'https://buyee.jp/rakuma/search?keyword=東方+ふもふも'
 
-DELAY_TIME = 2
+DELAY_TIME = 3
 
 
 _BANNED_KEYWORDS = ['キーホルダー', 'ラバー', 'アクリル', '湯のみ', 'マウスパッド', 'タオル', 'イラスト', 'CAN', 'マット', 'コスプレ'] # Keyholder, Strap, Rubber, Acrylic, Mug, Mousepad, Towel, Illustrate
@@ -66,7 +67,7 @@ def getFromYahooAuction():
         numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
     except:
         print(response)
-        return
+        return False
 
     numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
     startIndex = numOfPages.find('"page"') + 7
@@ -94,8 +95,7 @@ def getFromYahooAuction():
 
     fumoItems += parseYahooAuction(soup)        # Getting the last page, since it wasn't included in for loop
     
-
-    fumoDB.updateFumoDB(fumoItems, isAuction=True)
+    return fumoItems
     # fumoFile.close()
     # print(numOfPages)
 
@@ -139,7 +139,7 @@ def getFromStore(base_url: str):
         numOfPages = soup.select('.pagination-outer>.pagination>li>a')[-1]
     except:
         print(response)
-        return
+        return False
 
     startIndex = numOfPages.attrs['href'].find('page=') + 5
     numOfPages = int(numOfPages.attrs['href'][startIndex:])
@@ -160,27 +160,32 @@ def getFromStore(base_url: str):
 
     fumoItems += parseStore(soup)
 
-    fumoDB.updateFumoDB(fumoItems, isAuction=False)
+    return fumoItems
 
     # numOfPages = int(numOfPages[numOfPages.find('"page"') + 7])
 
 
 def updateRecords():
-    fumoDB.dropFumoData()
     # if os.path.exists('fumoFile.txt'):                                      # File that stores info on fumo items
     #     os.remove('fumoFile.txt')
 
     print('Pulling from Yahoo Auction')
-    getFromYahooAuction()
+    auctionItems = getFromYahooAuction()
 
     # print('Pulling from Yahoo Shopping')
     # getFromYahooShopping()
     
     print('Pulling from Mercari')
-    getFromStore(BASE_URL_MERCARI)
+    mercariItems = getFromStore(BASE_URL_MERCARI)
 
     print('Pulling from Rakuma')
-    getFromStore(BASE_URL_RAKUMA)
+    rakumaItems = getFromStore(BASE_URL_RAKUMA)
+
+    if auctionItems and mercariItems and rakumaItems:
+        fumoDB.dropFumoData()
+        fumoDB.updateFumoDB(auctionItems, isAuction=True)
+        fumoDB.updateFumoDB(mercariItems, isAuction=False)
+        fumoDB.updateFumoDB(rakumaItems, isAuction=False)
 
     # with open('soup.txt', 'w', encoding='utf8') as file:                # Storing data
     #     file.write(soup.prettify())
