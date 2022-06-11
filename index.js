@@ -8,7 +8,7 @@ app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
 
-const {PythonShell} = require('python-shell')
+// const {PythonShell} = require('python-shell')
 
 app.get('/api/fumo', (request, response) => {
 
