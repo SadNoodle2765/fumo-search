@@ -23,23 +23,22 @@ app.get('/api/fumo', (request, response) => {
     }
 })
 
-app.get('/updateDB', (request, response) => {
-    response.send('Updating DB')
-    let options = {
-        mode: 'text',
-        pythonOptions: ['-u'],
-        scriptPath: './python',
-        args: ['SadNoodle']
-    }
+// app.get('/updateDB', (request, response) => {
+//     response.send('Updating DB')
+//     let options = {
+//         mode: 'text',
+//         pythonOptions: ['-u'],
+//         scriptPath: './python',
+//         args: ['SadNoodle']
+//     }
 
-    PythonShell.run('main.py', options, (err, result) => {
-        if (err) throw err;
+//     PythonShell.run('main.py', options, (err, result) => {
+//         if (err) throw err;
 
-        console.log('result: ', result.toString())
-        response.send(result.toString())
-    })
-    // response.end('Finished Updating.')
-})
+//         console.log('result: ', result.toString())
+//     })
+//     // response.end('Finished Updating.')
+// })
 
 
 
