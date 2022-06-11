@@ -61,7 +61,6 @@ def getFromYahooAuction():
     response = requests.get(BASE_URL_AUCTION, headers=HEADERS)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    print(response)
     numOfPages = 0
     try:
         numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
@@ -135,7 +134,13 @@ def getFromStore(base_url: str):
     response = requests.get(base_url, headers=HEADERS)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    numOfPages = soup.select('.pagination-outer>.pagination>li>a')[-1]
+    numOfPages = 0
+    try:
+        numOfPages = soup.select('.pagination-outer>.pagination>li>a')[-1]
+    except:
+        print(response)
+        return
+
     startIndex = numOfPages.attrs['href'].find('page=') + 5
     numOfPages = int(numOfPages.attrs['href'][startIndex:])
     
@@ -171,11 +176,11 @@ def updateRecords():
     # print('Pulling from Yahoo Shopping')
     # getFromYahooShopping()
     
-    # print('Pulling from Mercari')
-    # getFromStore(BASE_URL_MERCARI)
+    print('Pulling from Mercari')
+    getFromStore(BASE_URL_MERCARI)
 
-    # print('Pulling from Rakuma')
-    # getFromStore(BASE_URL_RAKUMA)
+    print('Pulling from Rakuma')
+    getFromStore(BASE_URL_RAKUMA)
 
     # with open('soup.txt', 'w', encoding='utf8') as file:                # Storing data
     #     file.write(soup.prettify())
