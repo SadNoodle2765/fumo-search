@@ -67,7 +67,7 @@ def getFromYahooAuction():
         numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
     except:
         print(soup)
-        break
+        return
 
     numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
     startIndex = numOfPages.find('"page"') + 7
