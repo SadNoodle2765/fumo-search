@@ -1,4 +1,4 @@
-from os import environ
+from fake_useragent import UserAgent
+ua = UserAgent(use_cache_server=False)
 
-print(environ.get('PORT'))
-print(environ.get('MONGODB_URL'))
+print(ua.random)
