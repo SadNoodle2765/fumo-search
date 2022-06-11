@@ -1,0 +1,6 @@
+node_modules
+.env
+frontend
+!python/
+python/*
+!python/*.py
