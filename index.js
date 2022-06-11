@@ -32,7 +32,7 @@ app.get('/updateDB', (request, response) => {
         args: ['SadNoodle']
     }
 
-    PythonShell.run('python_test.py', options, (err, result) => {
+    PythonShell.run('main.py', options, (err, result) => {
         if (err) throw err;
 
         console.log('result: ', result.toString())
