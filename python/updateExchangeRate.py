@@ -10,7 +10,7 @@ db = client.fumoApp
 
 
 def updateExchangeRate():
-    rateCollection = db.exchangeRate
+    rateCollection = db.exchangerates
     rateCollection.drop()
 
     rate = requests.get(EXCHANGE_RATE_URL).json()

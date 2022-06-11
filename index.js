@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const Fumo = require('./models/fumo')
+const ExchangeRate = require('./models/exchangeRate')
 
 const app = express()
 app.use(express.json())
@@ -18,6 +19,20 @@ app.get('/api/fumo', (request, response) => {
         response.json([])
     } else {
         Fumo.find({fumoType: fumoType}).then(result => {
+            response.json(result)
+        })
+    }
+})
+
+app.get('/api/exchangerate', (request, response) => {
+    const currency = request.query.currency
+
+    if (currency == "all") {
+        ExchangeRate.find({}).then(result => {
+            response.json(result)
+        })
+    } else {
+        ExchangeRate.find({currency: currency}).then(result => {
             response.json(result)
         })
     }

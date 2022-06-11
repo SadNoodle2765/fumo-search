@@ -206,17 +206,48 @@ def updateRecords():
     # if os.path.exists('fumoFile.txt'):                                      # File that stores info on fumo items
     #     os.remove('fumoFile.txt')
 
-    print('Pulling from Yahoo Auction')
-    auctionItems = getFromYahooAuction()
+    RESTART_WAIT_TIME = 10
+
+    auctionItems = mercariItems = rakumaItems = False
+
+    for i in range(5):
+        print('Pulling from Yahoo Auction')
+        auctionItems = getFromYahooAuction()
+
+        if auctionItems:
+            print("Pulled successfully")
+            break
+
+        print('Failed pulling from auction. Trying again in 10 seconds')
+        time.sleep(RESTART_WAIT_TIME)
 
     # print('Pulling from Yahoo Shopping')
     # getFromYahooShopping()
-    
-    print('Pulling from Mercari')
-    mercariItems = getFromStore(BASE_URL_MERCARI)
 
-    print('Pulling from Rakuma')
-    rakumaItems = getFromStore(BASE_URL_RAKUMA)
+    for i in range(5):
+        print('Pulling from Mercari')
+        mercariItems = getFromStore(BASE_URL_MERCARI)
+
+        if mercariItems:
+            print("Pulled successfully")
+            break
+
+        print('Failed pulling from Mercari. Trying again in 10 seconds')
+        time.sleep(RESTART_WAIT_TIME)
+
+    for i in range(5):
+        print('Pulling from Rakuma')
+        rakumaItems = getFromStore(BASE_URL_RAKUMA)
+
+        if rakumaItems:
+            print("Pulled successfully")
+            break
+
+        print('Failed pulling from Rakuma. Trying again in 10 seconds')
+        time.sleep(RESTART_WAIT_TIME)
+
+
+    
 
     if auctionItems and mercariItems and rakumaItems:
         fumoDB.dropFumoData()
