@@ -38,7 +38,7 @@ app.get('/updateDB', (request, response) => {
         console.log('result: ', result.toString())
         response.send(result.toString())
     })
-    response.end('Finished Updating.')
+    // response.end('Finished Updating.')
 })
 
 
