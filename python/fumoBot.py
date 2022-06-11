@@ -61,6 +61,8 @@ def getFromYahooAuction():
     response = requests.get(BASE_URL_AUCTION, headers=HEADERS)
     soup = BeautifulSoup(response.text, 'html.parser')
 
+    print(soup)
+
     numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
     startIndex = numOfPages.find('"page"') + 7
     endIndex = numOfPages.find(',"rc"')
