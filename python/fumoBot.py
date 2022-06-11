@@ -61,12 +61,12 @@ def getFromYahooAuction():
     response = requests.get(BASE_URL_AUCTION, headers=HEADERS)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    print(soup)
+    print(response)
     numOfPages = 0
     try:
         numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
     except:
-        print(soup)
+        print(response)
         return
 
     numOfPages = soup.select('.page_navi>a')[-1].attrs['data-bind']
