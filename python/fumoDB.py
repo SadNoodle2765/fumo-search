@@ -35,11 +35,11 @@ def updateFumoDB(fumoItems, isAuction):
 
 
 if __name__ == '__main__':
-    pass
-    # reimus = db.fumoData.find({'fumoType': 'Reimu'})
-    # for reimu in reimus:
-    #     print(reimu['title'])
-    #     print(reimu['buyLink'])
-    #     print()
+
+    reimus = db.fumoData.find({'fumoType': 'Reimu'})
+    for reimu in reimus:
+        print(reimu['title'])
+        print(reimu['buyLink'])
+        print()
 
     # db.fumoData.rename('fumos', dropTarget=False)

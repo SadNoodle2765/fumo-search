@@ -1,4 +1,3 @@
-from heapq import merge
 import time
 import requests
 import os
@@ -44,6 +43,13 @@ user_agent_list = [
 HEADERS = {    
     'User-Agent': random.choice(user_agent_list)
 }
+
+def changeHeaders():
+    global HEADERS
+
+    HEADERS = {    
+        'User-Agent': random.choice(user_agent_list)
+    }
 
 # HEADERS = {
 #     'User-Agent': 'NonProfit-FumoBot (arceus3333@gmail.com)'
@@ -219,6 +225,7 @@ def updateRecords():
             break
 
         print('Failed pulling from auction. Trying again in 10 seconds')
+        changeHeaders()
         time.sleep(RESTART_WAIT_TIME)
 
     # print('Pulling from Yahoo Shopping')
@@ -233,6 +240,7 @@ def updateRecords():
             break
 
         print('Failed pulling from Mercari. Trying again in 10 seconds')
+        changeHeaders()
         time.sleep(RESTART_WAIT_TIME)
 
     for i in range(5):
@@ -244,6 +252,7 @@ def updateRecords():
             break
 
         print('Failed pulling from Rakuma. Trying again in 10 seconds')
+        changeHeaders()
         time.sleep(RESTART_WAIT_TIME)
 
 
@@ -267,18 +276,3 @@ def updateRecords():
     #         itemName = itemCard.select_one('.itemCard__itemName>a').text
     #         itemName = itemName.strip()
     #         file.write(itemName + '\n')
-
-def testUpdateRecords():
-    TEMP_WEBPAGE = open('soup.txt', 'r', encoding='utf8').read()
-    soup = BeautifulSoup(TEMP_WEBPAGE, 'html.parser')
-
-    itemCards = soup.find_all('li', class_='itemCard')
-
-    if os.path.exists('fumoFile.txt'):
-        os.remove('fumoFile.txt')
-
-    with open('fumoFile.txt', 'a', encoding='utf8') as file:
-        for itemCard in itemCards:
-            itemName = itemCard.select_one('.itemCard__itemName>a').text
-            itemName = itemName.strip()
-            file.write(itemName + '\n')
