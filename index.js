@@ -15,14 +15,14 @@ app.get('/api/fumo', (request, response) => {
 
     const queries = request.query
 
-    const fumoType = request.query.fumoType
+    const fumoName = request.query.fumoName
 
-    if (!queries.hasOwnProperty('fumoType') || fumoType == "") {            // If there's no fumoType or the fumoType is empty, return all the fumos
+    if (!queries.hasOwnProperty('fumoName') || fumoName == "") {            // If there's no fumoName or the fumoName is empty, return all the fumos
         Fumo.find({}).then(result => {
             response.json(result)
         })
     } else {
-        Fumo.find({fumoType: fumoType}).then(result => {
+        Fumo.find({fumoName: fumoName}).then(result => {
             response.json(result)
         })
     }
