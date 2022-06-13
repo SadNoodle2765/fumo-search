@@ -57,10 +57,11 @@ def changeHeaders():
 
 BASE_URL_BUYEE =  'https://buyee.jp'
 BASE_URL_AUCTION = 'https://buyee.jp/item/search/query/東方%20ふもふも'
+BASE_URL_SHOPPING = 'https://buyee.jp/category/yahoo/shopping/2134?query=東方+ふもふも'
 BASE_URL_MERCARI = 'https://buyee.jp/mercari/search?keyword=東方+ふもふも'
 BASE_URL_RAKUMA = 'https://buyee.jp/rakuma/search?keyword=東方+ふもふも'
 
-DELAY_TIME = 3
+DELAY_TIME = 1
 
 
 _BANNED_KEYWORDS = ['キーホルダー', 'ラバー', 'アクリル', '湯のみ', 'マウスパッド', 'タオル', 'イラスト', 'CAN', 'マット', 'コスプレ'] # Keyholder, Strap, Rubber, Acrylic, Mug, Mousepad, Towel, Illustrate
@@ -142,8 +143,64 @@ def getFromYahooAuction():
     # fumoFile.close()
     # print(numOfPages)
 
+def parseYahooShopping(soup) -> list[FumoItem]:
+    fumoItems = list()
+    itemCards = soup.find_all('li', class_='product_whole')
+
+    for itemCard in itemCards:
+        title = itemCard.select_one('.product_info>.product_title>span').text
+
+        if not isFumoTitle(title):                                                               # Removes non-fumo products
+            continue
+
+        print(title)
+
+        price = int(itemCard.select_one('a').attrs['data-price'])
+
+        buyLink = BASE_URL_BUYEE + itemCard.select_one('a').attrs['href']
+        buyLink = buyLink.split('?')[0]                                                          # Removes the extra query
+
+
+        imgLink = itemCard.find('img', class_='hide').attrs['data-src']
+
+        fumoItem = FumoItem(title, price, buyLink, imgLink)
+
+        fumoItems.append(fumoItem)
+
+    return fumoItems
+
 def getFromYahooShopping():
-    pass
+    response = requests.get(BASE_URL_SHOPPING, headers=HEADERS)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    numOfPages = 0
+    try:
+        numOfPages = soup.select('.page_navi>a')[-1].attrs['onclick']
+    except:
+        print(response.status_code)
+        return False
+    
+    startIndex = numOfPages.find('page.value')+13
+    endIndex = numOfPages.find(';')
+    numOfPages = int(numOfPages[startIndex:endIndex])
+
+    fumoItems = list()
+
+    print('Getting page 1')
+
+    for page in range(2, numOfPages+1):
+        fumoItems += parseYahooShopping(soup)
+
+        time.sleep(DELAY_TIME)                                                                       # Waiting to preserve politeness
+
+        print(f'Getting page {page}')
+        response = requests.get(BASE_URL_SHOPPING + f'&page={page}', headers=HEADERS)            # Getting data from next page
+        soup = BeautifulSoup(response.text, 'html.parser')
+    
+    fumoItems += parseYahooShopping(soup)        # Getting the last page, since it wasn't included in for loop
+    
+    return fumoItems
+
 
 def parseStore(soup):
     fumoItems = list()
@@ -212,7 +269,7 @@ def updateRecords():
     # if os.path.exists('fumoFile.txt'):                                      # File that stores info on fumo items
     #     os.remove('fumoFile.txt')
 
-    RESTART_WAIT_TIME = 10
+    RESTART_WAIT_TIME = 20
 
     auctionItems = mercariItems = rakumaItems = False
 
@@ -224,12 +281,23 @@ def updateRecords():
             print("Pulled successfully")
             break
 
-        print('Failed pulling from auction. Trying again in 10 seconds')
+        print('Failed pulling from auction. Trying again in 20 seconds')
         changeHeaders()
         time.sleep(RESTART_WAIT_TIME)
 
-    # print('Pulling from Yahoo Shopping')
-    # getFromYahooShopping()
+
+    for i in range(5):
+        print('Pulling from Yahoo Shopping')
+        shoppingItems = getFromYahooShopping()
+
+        if shoppingItems:
+            print("Pulled successfully")
+            break
+
+        print("Failed pulling from shopping. Trying again in 20 seconds")
+        changeHeaders()
+        time.sleep(RESTART_WAIT_TIME)
+
 
     for i in range(5):
         print('Pulling from Mercari')
@@ -239,7 +307,7 @@ def updateRecords():
             print("Pulled successfully")
             break
 
-        print('Failed pulling from Mercari. Trying again in 10 seconds')
+        print('Failed pulling from Mercari. Trying again in 02 seconds')
         changeHeaders()
         time.sleep(RESTART_WAIT_TIME)
 
@@ -251,16 +319,17 @@ def updateRecords():
             print("Pulled successfully")
             break
 
-        print('Failed pulling from Rakuma. Trying again in 10 seconds')
+        print('Failed pulling from Rakuma. Trying again in 20 seconds')
         changeHeaders()
         time.sleep(RESTART_WAIT_TIME)
 
 
     
 
-    if auctionItems and mercariItems and rakumaItems:
+    if auctionItems and shoppingItems and mercariItems and rakumaItems:
         fumoDB.dropFumoData()
         fumoDB.updateFumoDB(auctionItems, isAuction=True)
+        fumoDB.updateFumoDB(shoppingItems, isAuction=False)
         fumoDB.updateFumoDB(mercariItems, isAuction=False)
         fumoDB.updateFumoDB(rakumaItems, isAuction=False)
 
@@ -276,3 +345,10 @@ def updateRecords():
     #         itemName = itemCard.select_one('.itemCard__itemName>a').text
     #         itemName = itemName.strip()
     #         file.write(itemName + '\n')
+
+if __name__ == '__main__':
+    response = requests.get('https://buyee.jp/item/search/yahoo/shopping?query=東方%20ふもふも%20さくや', headers=HEADERS)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    fumoItems = parseYahooShopping(soup)
+    for fumo in fumoItems:
+        print(fumo.fumoType)

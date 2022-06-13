@@ -18,7 +18,9 @@ const fumoSchema = new mongoose.Schema({
     price: Number,
     buyoutPrice: Number,
     buyLink: String,
-    imgLink: String
+    imgLink: String,
+    shop: String,
+    isAuction: Boolean
 })
 
 
