@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.6a11799a.css",
-    "main.js": "/static/js/main.bf78cf6d.js",
+    "main.css": "/static/css/main.cf858fe4.css",
+    "main.js": "/static/js/main.d7cd7ba6.js",
+    "static/media/koishiSad.jpg": "/static/media/koishiSad.3815f993f11ac3718e17.jpg",
     "index.html": "/index.html",
-    "main.6a11799a.css.map": "/static/css/main.6a11799a.css.map",
-    "main.bf78cf6d.js.map": "/static/js/main.bf78cf6d.js.map"
+    "main.cf858fe4.css.map": "/static/css/main.cf858fe4.css.map",
+    "main.d7cd7ba6.js.map": "/static/js/main.d7cd7ba6.js.map"
   },
   "entrypoints": [
-    "static/css/main.6a11799a.css",
-    "static/js/main.bf78cf6d.js"
+    "static/css/main.cf858fe4.css",
+    "static/js/main.d7cd7ba6.js"
   ]
 }
