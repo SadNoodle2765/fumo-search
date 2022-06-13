@@ -13,10 +13,14 @@ app.use(express.static('build'))
 
 app.get('/api/fumo', (request, response) => {
 
+    const queries = request.query
+
     const fumoType = request.query.fumoType
 
-    if (fumoType == "") {
-        response.json([])
+    if (!queries.hasOwnProperty('fumoType') || fumoType == "") {            // If there's no fumoType or the fumoType is empty, return all the fumos
+        Fumo.find({}).then(result => {
+            response.json(result)
+        })
     } else {
         Fumo.find({fumoType: fumoType}).then(result => {
             response.json(result)
