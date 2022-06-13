@@ -14,7 +14,8 @@ mongoose.connect(url)
 
 const fumoSchema = new mongoose.Schema({
     title: String,
-    fumoType: String,
+    fumoName: String,
+    fumoTypes: Array,
     price: Number,
     buyoutPrice: Number,
     buyLink: String,
