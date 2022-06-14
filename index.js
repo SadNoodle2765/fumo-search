@@ -1,12 +1,16 @@
 require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
-const Fumo = require('./models/fumo')
+const morgan = require('morgan')
+const fumoModule = require('./models/fumo')
+const Fumo = fumoModule.Fumo
+const SavedFumo = fumoModule.SavedFumo
 const ExchangeRate = require('./models/exchangeRate')
 
 const app = express()
 app.use(express.json())
 app.use(cors())
+app.use(morgan('tiny'));
 app.use(express.static('build'))
 
 // const {PythonShell} = require('python-shell')
@@ -41,6 +45,37 @@ app.get('/api/exchangerate', (request, response) => {
         })
     }
 })
+
+app.get('/api/savedfumos', (request, response) =>  {
+    const userName = request.query.userName
+
+    SavedFumo.findOne({userName: userName}).then(result => {
+        response.json(result)
+    })
+}) 
+
+app.post('/api/savedfumos', (request, response) => {
+    const body = request.body
+    const userName = body.userName
+    const link = body.link
+
+    SavedFumo.findOneAndUpdate({userName: userName}, {$addToSet: {links: link}}, {upsert: true}, (err, doc) => {            // upsert makes it so it adds document if username doesn't exist
+        if (err) return response.send(500, {error: err})
+        return response.send('Saved successfully')
+    })
+})
+
+app.delete('/api/savedfumos', (request, response) => {
+    const body = request.body
+    const userName = body.userName
+    const link = body.link
+
+    SavedFumo.findOneAndUpdate({userName: userName}, {$pull: {links: link}}, (err, doc) => {
+        if (err) return response.send(500, {error: err})
+        return response.send('Removed link successfully')
+    })
+})
+
 
 // app.get('/updateDB', (request, response) => {
 //     response.send('Updating DB')
