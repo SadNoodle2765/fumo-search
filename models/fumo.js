@@ -24,6 +24,11 @@ const fumoSchema = new mongoose.Schema({
     isAuction: Boolean
 })
 
+const savedFumoSchema = new mongoose.Schema({
+    userName: String,
+    links: Array
+})
+
 
 fumoSchema.set('toJSON', {
     transform: (document, returnedObject) => {
@@ -33,4 +38,7 @@ fumoSchema.set('toJSON', {
     }
 })
 
-module.exports = mongoose.model('Fumo', fumoSchema)
+module.exports = {
+    Fumo: mongoose.model('Fumo', fumoSchema),
+    SavedFumo: mongoose.model('SavedFumo', savedFumoSchema)
+}
