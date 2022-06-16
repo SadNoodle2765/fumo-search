@@ -6,8 +6,6 @@ from fumo import FumoItem, FumoAuctionItem
 
 MONGODB_URL = environ.get('MONGODB_URL')
 
-
-
 client = MongoClient(MONGODB_URL)
 db = client.fumoApp
 collection = db.fumos
@@ -35,11 +33,4 @@ def updateFumoDB(fumoItems, isAuction):
 
 
 if __name__ == '__main__':
-
-    reimus = db.fumoData.find({'fumoType': 'Reimu'})
-    for reimu in reimus:
-        print(reimu['title'])
-        print(reimu['buyLink'])
-        print()
-
-    # db.fumoData.rename('fumos', dropTarget=False)
+    pass

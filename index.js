@@ -6,6 +6,7 @@ const morgan = require('morgan')
 const fumoModule = require('./models/fumo')
 const Fumo = fumoModule.Fumo
 const SavedFumo = fumoModule.SavedFumo
+const Vote = fumoModule.Vote
 const ExchangeRate = require('./models/exchangeRate')
 
 const app = express()
@@ -26,6 +27,26 @@ app.get('/saved', (request, response) => {
 
 app.get('/alerter', (request, response) => {
     response.sendFile('index.html', {root: path.join(__dirname, 'build/')})
+})
+
+app.get('/api/vote', (request, response) => {
+    const userName = request.query.userName
+    Vote.findOne({userName: userName}).then(result => {
+        response.json(result)
+    })
+})
+
+app.post('/api/vote', (request, response) => {
+    const body = request.body
+    const userName = body.userName
+    const fumo = body.fumo
+
+    console.log(userName, fumo)
+
+    Vote.findOneAndUpdate({userName: userName}, {$set: {fumo: fumo}}, {upsert: true}, (err, doc) => {            // upsert makes it so it adds document if username doesn't exist
+        if (err) return response.send(500, {error: err})
+        return response.send('Saved successfully')
+    })
 })
 
 app.get('/api/fumo', (request, response) => {

@@ -29,6 +29,11 @@ const savedFumoSchema = new mongoose.Schema({
     links: Array
 })
 
+const voteSchema = new mongoose.Schema({
+    userName: String,
+    fumo: String
+})
+
 
 fumoSchema.set('toJSON', {
     transform: (document, returnedObject) => {
@@ -40,5 +45,6 @@ fumoSchema.set('toJSON', {
 
 module.exports = {
     Fumo: mongoose.model('Fumo', fumoSchema),
-    SavedFumo: mongoose.model('SavedFumo', savedFumoSchema)
+    SavedFumo: mongoose.model('SavedFumo', savedFumoSchema),
+    Vote: mongoose.model('Vote', voteSchema)
 }
