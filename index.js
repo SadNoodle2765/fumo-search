@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
@@ -14,6 +15,18 @@ app.use(morgan('tiny'));
 app.use(express.static('build'))
 
 // const {PythonShell} = require('python-shell')
+
+app.get('/search', (request, response) => {
+    response.sendFile('index.html', {root: path.join(__dirname, 'build/')})
+})
+
+app.get('/saved', (request, response) => {
+    response.sendFile('index.html', {root: path.join(__dirname, 'build/')})
+})
+
+app.get('/alerter', (request, response) => {
+    response.sendFile('index.html', {root: path.join(__dirname, 'build/')})
+})
 
 app.get('/api/fumo', (request, response) => {
 
