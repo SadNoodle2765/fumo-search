@@ -36,13 +36,12 @@ app.get('/api/vote', (request, response) => {
     if (!queries.hasOwnProperty('userName')) {
         Vote.find({}).then(result => {
             response.json(result)
-            return
+        })
+    } else {
+        Vote.findOne({userName: userName}).then(result => {
+            response.json(result)
         })
     }
-
-    Vote.findOne({userName: userName}).then(result => {
-        response.json(result)
-    })
 })
 
 app.post('/api/vote', (request, response) => {
