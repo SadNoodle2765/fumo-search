@@ -30,6 +30,7 @@ app.get('/alerter', (request, response) => {
 })
 
 app.get('/api/vote', (request, response) => {
+    const queries = request.query
     const userName = request.query.userName
 
     if (!queries.hasOwnProperty('userName')) {
