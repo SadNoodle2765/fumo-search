@@ -31,6 +31,14 @@ app.get('/alerter', (request, response) => {
 
 app.get('/api/vote', (request, response) => {
     const userName = request.query.userName
+
+    if (!queries.hasOwnProperty('userName')) {
+        Vote.find({}).then(result => {
+            response.json(result)
+            return
+        })
+    }
+
     Vote.findOne({userName: userName}).then(result => {
         response.json(result)
     })
