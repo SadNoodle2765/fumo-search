@@ -49,8 +49,6 @@ app.post('/api/vote', (request, response) => {
     const userName = body.userName
     const fumo = body.fumo
 
-    console.log(userName, fumo)
-
     Vote.findOneAndUpdate({userName: userName}, {$set: {fumo: fumo}}, {upsert: true}, (err, doc) => {            // upsert makes it so it adds document if username doesn't exist
         if (err) return response.send(500, {error: err})
         return response.send('Saved successfully')
@@ -62,13 +60,15 @@ app.get('/api/fumo', (request, response) => {
     const queries = request.query
 
     const fumoName = request.query.fumoName
+    const tags = request.query.tags
+    console.log(tags)
 
     if (!queries.hasOwnProperty('fumoName') || fumoName == "") {            // If there's no fumoName or the fumoName is empty, return all the fumos
         Fumo.find({}).then(result => {
             response.json(result)
         })
     } else {
-        Fumo.find({fumoName: fumoName}).then(result => {
+        Fumo.find({fumoName: fumoName, fumoTypes: {$all: tags}}).then(result => {
             response.json(result)
         })
     }
